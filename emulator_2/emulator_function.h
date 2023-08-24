@@ -27,13 +27,13 @@ int32_t get_sign_code32(Emulator* emu, int index);
 uint8_t get_register8(Emulator* emu, int index);
 
 //  index番目の32bit汎用レジスタの値を取得する
-uint8_t get_register32(Emulator* emu, int index);
+uint32_t get_register32(Emulator* emu, int index);
 
 // index番目の8bit汎用レジスタに値をセットする
 void set_register8(Emulator* emu, int index, uint8_t value);
 
 //  index番目の32bit汎用レジスタに値をセットする
-void set_register32(Emulator* emu, int index, uint8_t value);
+void set_register32(Emulator* emu, int index, uint32_t value);
 
 // メモリのindex番地の8bit値を取得する
 uint32_t get_memory8(Emulator* emu, uint32_t address);
@@ -60,10 +60,10 @@ void set_sign(Emulator* emu, int is_sign);
 void set_overflow(Emulator* emu, int is_overflow);
 
 //  EFLAGの各フラグ取得用関数
-void is_carry(Emulator* emu);
-void is_zero(Emulator* emu);
-void is_sign(Emulator* emu);
-void is_overflow(Emulator* emu);
+int32_t is_carry(Emulator* emu);
+int32_t is_zero(Emulator* emu);
+int32_t is_sign(Emulator* emu);
+int32_t is_overflow(Emulator* emu);
 
 // 減算によるEFLAGSの更新関数
 void update_eflags_sub(Emulator* emu, uint32_t v1, uint32_t v2, uint64_t result);
