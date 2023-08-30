@@ -37,7 +37,7 @@ emuからModR/M, SIB, ディスプレースメントを読み取ってmodrmに�
 　emu: eip が ModR/M バイトの先頭を指しているエミュレータ構造体
 　modrm: 解析結果を格納する構造体
 */
-void parse_mordm(Emulator* emu, ModRM* modrm);
+void parse_modrm(Emulator* emu, ModRM* modrm);
 
 /*
 ModR/M の内容に基づきメモリの実行アドレスを計算する

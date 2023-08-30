@@ -93,7 +93,7 @@ uint8_t get_rm8(Emulator* emu, ModRM* modrm) {
   }
 }
 
-uint8_t get_rm32(Emulator* emu, ModRM* modrm) {
+uint32_t get_rm32(Emulator* emu, ModRM* modrm) {
   if (modrm->mod == 3) {
     return get_register32(emu, modrm->rm);
   } else {

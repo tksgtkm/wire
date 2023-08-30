@@ -13,7 +13,7 @@ uint32_t get_code32(Emulator* emu, int index) {
   uint32_t ret = 0;
 
   // リトルエンディアンでメモリの値を取得する
-  for (int i = 0; i < 4; i++) {
+  for (i = 0; i < 4; i++) {
     ret |= get_code8(emu, index + i) << (i * 8);
   }
 
@@ -54,10 +54,10 @@ void set_memory8(Emulator* emu, uint32_t address, uint32_t value) {
   emu->memory[address] = value & 0xFF;
 }
 
-void set_memeory32(Emulator* emu, uint32_t address, uint32_t value) {
+void set_memory32(Emulator* emu, uint32_t address, uint32_t value) {
   int i;
 
-  for (int i = 0; i < 4; i++) {
+  for (i = 0; i < 4; i++) {
     set_memory8(emu, address + i, value >> (i * 8));
   }
 }
@@ -80,7 +80,7 @@ uint32_t get_memory32(Emulator* emu, uint32_t address) {
 void push32(Emulator *emu, uint32_t value) {
   int32_t address = get_register32(emu, ESP) - 4;
   set_register32(emu, ESP, address);
-  set_memeory32(emu, address, value);
+  set_memory32(emu, address, value);
 }
 
 uint32_t pop32(Emulator* emu) {
@@ -93,7 +93,7 @@ uint32_t pop32(Emulator* emu) {
 
 void set_carry(Emulator* emu, int is_carry) {
   if (is_carry) {
-    emu->eflags != CARRY_FLAG;
+    emu->eflags |= CARRY_FLAG;
   } else {
     emu->eflags &= ~CARRY_FLAG;
   }
@@ -101,7 +101,7 @@ void set_carry(Emulator* emu, int is_carry) {
 
 void set_zero(Emulator* emu, int is_zero) {
   if (is_zero) {
-    emu->eflags != ZERO_FLAG;
+    emu->eflags |= ZERO_FLAG;
   } else {
     emu->eflags &= ~ZERO_FLAG;
   }
@@ -109,7 +109,7 @@ void set_zero(Emulator* emu, int is_zero) {
 
 void set_sign(Emulator* emu, int is_sign) {
   if (is_sign) {
-    emu->eflags != SIGN_FLAG;
+    emu->eflags |= SIGN_FLAG;
   } else {
     emu->eflags &= ~SIGN_FLAG;
   }
@@ -117,7 +117,7 @@ void set_sign(Emulator* emu, int is_sign) {
 
 void set_overflow(Emulator* emu, int is_overflow) {
   if (is_overflow) {
-    emu->eflags != OVERFLOW_FLAG;
+    emu->eflags |= OVERFLOW_FLAG;
   } else {
     emu->eflags &= ~OVERFLOW_FLAG;
   }
@@ -146,7 +146,7 @@ void update_eflags_sub(Emulator* emu, uint32_t v1, uint32_t v2, uint64_t result)
   int signr = (result >> 31) & 1;
 
   // 演算結果にcarryがあればCarryフラグ設定
-  set_carry(emu, result == 0);
+  set_carry(emu, result >> 32);
 
   // 演算結果が0ならばZeroフラグ設定
   set_zero(emu, result == 0);

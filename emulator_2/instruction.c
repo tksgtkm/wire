@@ -28,7 +28,7 @@ static void mov_r32_imm32(Emulator* emu) {
 static void mov_r8_rm8(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
   uint32_t rm8 = get_rm8(emu, &modrm);
   set_r8(emu, &modrm, rm8);
 }
@@ -36,7 +36,7 @@ static void mov_r8_rm8(Emulator* emu) {
 static void mov_r32_rm32(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
   uint32_t rm8 = get_rm32(emu, &modrm);
   set_r32(emu, &modrm, rm8);
 }
@@ -44,7 +44,7 @@ static void mov_r32_rm32(Emulator* emu) {
 static void add_rm32_r32(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
   uint32_t r32 = get_r32(emu, &modrm);
   uint32_t rm32 = get_rm32(emu, &modrm);
   set_rm32(emu, &modrm, rm32 + r32);
@@ -53,7 +53,7 @@ static void add_rm32_r32(Emulator* emu) {
 static void mov_rm8_r8(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
   uint32_t r8 = get_r8(emu, &modrm);
   set_rm8(emu, &modrm, r8);
 }
@@ -123,7 +123,7 @@ static void sub_rm32_imm8(Emulator* emu, ModRM* modrm) {
 static void code_83(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
 
   switch (modrm.opecode) {
     case 0:
@@ -144,7 +144,7 @@ static void code_83(Emulator* emu) {
 static void mov_rm32_imm32(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
   uint32_t value = get_code32(emu, 0);
   emu->eip += 4;
   set_rm32(emu, &modrm, value);
@@ -178,11 +178,11 @@ static void call_rel32(Emulator* emu) {
 static void code_ff(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
 
   switch (modrm.opecode) {
     case 0:
-      int_rm32(emu, &modrm);
+      inc_rm32(emu, &modrm);
       break;
     default:
       printf("not implemented: FF %d\n", modrm.opecode);
@@ -231,7 +231,7 @@ static void cmp_eax_imm32(Emulator* emu) {
 static void cmp_r32_rm32(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
-  parse_mordm(emu, &modrm);
+  parse_modrm(emu, &modrm);
   uint32_t r32 = get_r32(emu, &modrm);
   uint32_t rm32 = get_rm32(emu, &modrm);
   uint64_t result = (uint64_t)r32 - (uint64_t)rm32;
@@ -249,11 +249,11 @@ static void jn ## flag(Emulator* emu) { \
 }
 
 DEFINE_JX(c, is_carry);
-DEFINE_JX(z, iz_zero);
-DEFINE_JX(s, is_aign);
+DEFINE_JX(z, is_zero);
+DEFINE_JX(s, is_sign);
 DEFINE_JX(o, is_overflow);
 
-#define DEFINE_JX
+#undef DEFINE_JX
 
 static void jl(Emulator* emu) {
   int diff = (is_sign(emu) != is_overflow(emu)) ? get_sign_code8(emu, 1) : 0;

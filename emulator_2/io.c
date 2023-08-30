@@ -2,6 +2,7 @@
 #include "emulator.h"
 
 #include <stdint.h>
+#include <stdio.h>
 
 uint8_t io_in8(uint16_t address) {
   switch (address) {
