@@ -57,6 +57,7 @@ void set_memory8(Emulator* emu, uint32_t address, uint32_t value) {
 void set_memory32(Emulator* emu, uint32_t address, uint32_t value) {
   int i;
 
+  // リトルエンディアンでメモリの値を定義する
   for (i = 0; i < 4; i++) {
     set_memory8(emu, address + i, value >> (i * 8));
   }

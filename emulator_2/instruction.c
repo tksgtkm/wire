@@ -169,12 +169,6 @@ static void inc_rm32(Emulator* emu, ModRM* modrm) {
   set_rm32(emu, modrm, value + 1);
 }
 
-static void call_rel32(Emulator* emu) {
-  int32_t diff = get_sign_code32(emu, 1);
-  push32(emu, emu->eip + 5);
-  emu->eip += (diff + 5);
-}
-
 static void code_ff(Emulator* emu) {
   emu->eip += 1;
   ModRM modrm;
@@ -188,6 +182,12 @@ static void code_ff(Emulator* emu) {
       printf("not implemented: FF %d\n", modrm.opecode);
       exit(1);
   }
+}
+
+static void call_rel32(Emulator* emu) {
+  int32_t diff = get_sign_code32(emu, 1);
+  push32(emu, emu->eip + 5);
+  emu->eip += (diff + 5);
 }
 
 static void ret(Emulator* emu) {
@@ -239,7 +239,8 @@ static void cmp_r32_rm32(Emulator* emu) {
 }
 
 #define DEFINE_JX(flag, is_flag) \
-static void j ## flag(Emulator* emu) { \
+static void j ## flag(Emulator* emu) \
+{ \
   int diff = is_flag(emu) ? get_sign_code8(emu, 1) : 0; \
   emu->eip += (diff + 2); \
 } \
@@ -248,10 +249,10 @@ static void jn ## flag(Emulator* emu) { \
   emu->eip += (diff + 2); \
 }
 
-DEFINE_JX(c, is_carry);
-DEFINE_JX(z, is_zero);
-DEFINE_JX(s, is_sign);
-DEFINE_JX(o, is_overflow);
+DEFINE_JX(c, is_carry)
+DEFINE_JX(z, is_zero)
+DEFINE_JX(s, is_sign)
+DEFINE_JX(o, is_overflow)
 
 #undef DEFINE_JX
 
@@ -265,7 +266,7 @@ static void jle(Emulator* emu) {
   emu->eip += (diff + 2);
 }
 
-void init_instructions() {
+void init_instructions(void) {
   int i;
   memset(instructions, 0, sizeof(instructions));
   instructions[0x01] = add_rm32_r32;

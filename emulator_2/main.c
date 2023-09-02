@@ -121,6 +121,7 @@ int main(int argc, char* argv[]) {
       break;
     }
 
+
     // 命令の実行
     instructions[code](emu);
 
